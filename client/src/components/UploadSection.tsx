@@ -5,6 +5,11 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, X, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
 
+/**
+ * UploadSection Component
+ * Handles both audio file uploads and manual transcript pasting.
+ * Integrates with OpenAI Whisper (via backend) for speech-to-text.
+ */
 export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: () => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState('');
@@ -24,15 +29,20 @@ export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: ()
     multiple: false
   });
 
+  /**
+   * Main processing handler
+   * Dispatches data to the AI processing pipeline based on current mode
+   */
   const handleProcess = async () => {
-    if (mode === 'audio' && !file) return setError('Please upload an audio file');
-    if (mode === 'text' && !text) return setError('Please paste meeting transcript');
-    if (!title) return setError('Please add a meeting title');
+    if (mode === 'audio' && !file) return setError('Please upload an audio file to continue.');
+    if (mode === 'text' && !text) return setError('Please paste a meeting transcript to proceed.');
+    if (!title) return setError('A meeting title is required for organization.');
 
     setUploading(true);
     setError('');
 
     try {
+      console.log(`[Upload] Starting processing for: ${title}`);
       const token = localStorage.getItem('token');
       const formData = new FormData();
       formData.append('title', title);

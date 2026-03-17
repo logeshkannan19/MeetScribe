@@ -15,13 +15,22 @@ import {
 import UploadSection from './UploadSection';
 import { motion, AnimatePresence } from 'framer-motion';
 
+/**
+ * MeetingDashboard Component
+ * The main nerve center for MeetScribe AI. 
+ * Provides a searchable history of meetings and detailed AI-generated insights.
+ */
 export default function MeetingDashboard() {
   const [notes, setNotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState<any>(null);
 
+  /**
+   * Fetch user's meeting history from the API
+   */
   const fetchNotes = async () => {
     try {
+      console.log('[Dashboard] Fetching meeting history...');
       const token = localStorage.getItem('token');
       const res = await axios.get('http://localhost:5001/api/notes', {
         headers: { Authorization: `Bearer ${token}` }
@@ -38,10 +47,14 @@ export default function MeetingDashboard() {
     fetchNotes();
   }, []);
 
+  /**
+   * Handle note deletion with confirmation
+   */
   const deleteNote = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm('Are you sure you want to delete this note?')) return;
+    if (!confirm('Are you certain you want to permanently delete this meeting note?')) return;
     try {
+      console.log(`[Dashboard] Deleting note: ${id}`);
       const token = localStorage.getItem('token');
       await axios.delete(`http://localhost:5001/api/notes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
