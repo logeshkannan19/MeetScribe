@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, X, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, FileText, X, Loader2, CheckCircle, AlertCircle, Zap } from 'lucide-react';
 import axios from 'axios';
 
 /**
