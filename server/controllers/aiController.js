@@ -20,13 +20,15 @@ exports.processMeeting = async (req, res) => {
     // Handle audio file transcription if provided
     if (req.file) {
       console.log(`[AI] Transcribing audio: ${req.file.originalname}`);
+      // We stream the file directly form the local disk. 
+      // Whisper-1 is exceptionally fast for files under 25MB.
       const transcription = await openai.audio.transcriptions.create({
         file: fs.createReadStream(req.file.path),
         model: 'whisper-1',
       });
       finalTranscript = transcription.text;
       
-      // Clean up temporary upload
+      // Cleanup is critical to prevent storage bloat in serverless or containerized envs
       fs.unlinkSync(req.file.path);
     }
 
@@ -48,6 +50,9 @@ exports.processMeeting = async (req, res) => {
       ${finalTranscript}
     `;
 
+    // Using JSON mode (gpt-4o) ensures we get parseable data for our UI.
+    // The prompt explicitly requests arrays for summaries and action items
+    // to match our Mongoose schema definitions.
     const response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [{ role: 'user', content: prompt }],

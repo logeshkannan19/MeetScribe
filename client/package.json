@@ -1,8 +1,8 @@
 {
-  "name": "client",
-  "version": "0.1.0",
+  "name": "meetscribe-client",
+  "version": "1.0.0",
+  "description": "Premium Next.js frontend for MeetScribe AI",
   "private": true,
-  "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

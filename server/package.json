@@ -1,14 +1,15 @@
 {
-  "name": "server",
+  "name": "meetscribe-server",
   "version": "1.0.0",
+  "description": "AI-powered backend API for MeetScribe AI (Whisper + GPT-4o)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": ["ai", "meeting", "scribe", "whisper", "gpt-4"],
+  "author": "Logesh Kannan",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
