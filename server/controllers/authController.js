@@ -8,11 +8,16 @@ const generateToken = (id) => {
   });
 };
 
+/**
+ * @desc    Register a new user
+ * @route   POST /api/auth/register
+ * @access  Public
+ */
 exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const userExists = await User.findOne({ email });
+    console.log(`[Auth] Attempting registration for: ${email}`);
     if (userExists) {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
@@ -29,11 +34,16 @@ exports.register = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Authenticate user & get token
+ * @route   POST /api/auth/login
+ * @access  Public
+ */
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email }).select('+password');
+    console.log(`[Auth] Login attempt: ${email}`);
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
@@ -48,6 +58,11 @@ exports.login = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get currently logged in user
+ * @route   GET /api/auth/me
+ * @access  Private
+ */
 exports.getMe = async (req, res) => {
   res.status(200).json({ success: true, user: req.user });
 };

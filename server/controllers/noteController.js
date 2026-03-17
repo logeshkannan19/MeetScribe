@@ -1,5 +1,10 @@
 const Note = require('../models/Note');
 
+/**
+ * @desc    Get all meeting notes for the current user
+ * @route   GET /api/notes
+ * @access  Private
+ */
 exports.getNotes = async (req, res) => {
   try {
     const notes = await Note.find({ user: req.user.id }).sort('-createdAt');
@@ -9,6 +14,11 @@ exports.getNotes = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Get a single meeting note
+ * @route   GET /api/notes/:id
+ * @access  Private
+ */
 exports.getNote = async (req, res) => {
   try {
     const note = await Note.findById(req.params.id);
@@ -21,9 +31,14 @@ exports.getNote = async (req, res) => {
   }
 };
 
+/**
+ * @desc    Delete a meeting note
+ * @route   DELETE /api/notes/:id
+ * @access  Private
+ */
 exports.deleteNote = async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
+    console.log(`[Notes] Deleting note: ${req.params.id}`);
     if (!note || note.user.toString() !== req.user.id) {
       return res.status(404).json({ success: false, message: 'Note not found' });
     }

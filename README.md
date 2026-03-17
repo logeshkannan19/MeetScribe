@@ -1,24 +1,32 @@
-# MeetScribe AI 🎙️
+# MeetScribe AI – Smart AI Meeting Notes Summarizer 🎙️🚀
 
 **"Turn meetings into clarity in seconds."**
 
-MeetScribe AI is a premium SaaS application that leverages OpenAI Whisper and GPT-4o to transform meeting audio and transcripts into structured, actionable insights.
+MeetScribe AI is a production-ready SaaS application that leverages OpenAI Whisper and GPT-4o to transform meeting audio and transcripts into structured summaries, action items, and actionable insights.
+
+---
 
 ## ✨ Features
 
-- 🎙️ **Smart Transcription**: Near-instant speech-to-text using OpenAI Whisper.
-- 🧠 **AI Summarization**: GPT-4o powered executive summaries and key highlights.
-- ✅ **Action Items**: Automatically detect tasks and owners from your discussions.
-- 📊 **Sentiment Analysis**: Understand the tone and mood of your meetings.
-- 💾 **Safe Storage**: History of all your meetings, searchable and securely stored.
-- 🎨 **Modern UI**: A glassmorphic, dark-mode-first dashboard built with Next.js & Tailwind.
+- 🎙️ **Smart Transcription**: Near-instant speech-to-text using OpenAI Whisper (MP3, WAV, etc.).
+- 🧠 **AI Summaries**: GPT-4o powered concise summaries, key discussion highlights, and important decisions.
+- ✅ **Action Item Tracking**: Automatically detect tasks and responsibilities with precision.
+- 📈 **Sentiment Analysis**: Understand the tone and mood of your meetings at a glance.
+- 💾 **Personal Dashboard**: A secure, glassmorphic history of all your meeting notes.
+- 📤 **Export & Share**: Professional PDF exports and shareable links for better collaboration.
 
-## 🛠️ Tech Stack
+---
+
+## 🏗️ Architecture
 
 - **Frontend**: Next.js 14, Tailwind CSS, Framer Motion, Lucide React
-- **Backend**: Node.js, Express, Multer (file handling)
+- **Backend**: Node.js, Express, Multer
 - **Database**: MongoDB (Mongoose)
-- **AI Integration**: OpenAI SDK (Whisper V3 & GPT-4o)
+- **AI Engine**: OpenAI SDK (Whisper V3 & GPT-4o)
+
+Refer to the [Architecture Overview](ARCHITECTURE.md) for a deep dive into our design choices.
+
+---
 
 ## 🚀 Getting Started
 
@@ -27,36 +35,45 @@ MeetScribe AI is a premium SaaS application that leverages OpenAI Whisper and GP
 - MongoDB Atlas account
 - OpenAI API Key
 
-### 2. Backend Setup
+### 2. Installation
+
 ```bash
+# Clone the repository
+git clone https://github.com/logeshkannan19/MeetScribe.git
+cd MeetScribe
+
+# Setup Backend
 cd server
 npm install
 cp .env.example .env
-# Fill in MONGODB_URI and OPENAI_API_KEY
+# Update .env with your credentials
 npm start
-```
 
-### 3. Frontend Setup
-```bash
-cd client
+# Setup Frontend
+cd ../client
 npm install
 npm run dev
 ```
 
-Visit `http://localhost:3000` to see the landing page.
+Visit `http://localhost:3000` to start scribe-ing.
 
-## 📁 Project Structure
+---
 
-```
-meetscribe-ai/
-├── client/          # Next.js App Router & Components
-├── server/          # Node.js API & AI Logic
-│   ├── controllers/ # Business logic (Auth, AI, Notes)
-│   ├── models/      # Mongoose Schemas (User, Note)
-│   ├── middleware/  # Auth & Upload filters
-│   └── routes/      # API endpoints
-└── README.md
-```
+## 🗺️ Roadmap
+Check our [Roadmap](ROADMAP.md) to see what's coming next, including real-time transcription and speaker diarization.
+
+---
+
+## 🤝 Contributing
+Contributions are welcome! See our [Contributing Guide](CONTRIBUTING.md) to get started.
+
+---
 
 ## 📄 License
-MIT License.
+Distributed under the MIT License. See [LICENSE](LICENSE) for details.
+
+---
+
+<div align="center">
+Made with 🎙️ by <a href="https://github.com/logeshkannan19">logeshkannan19</a>
+</div>
