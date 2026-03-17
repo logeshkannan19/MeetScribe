@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
 import { 
   Clock, 
   FileText, 
@@ -34,7 +36,7 @@ export default function MeetingDashboard() {
     try {
       console.log('[Dashboard] Fetching meeting history...');
       const token = localStorage.getItem('token');
-      const res = await axios.get('http://localhost:5001/api/notes', {
+      const res = await axios.get(`${API_URL}/api/notes`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotes(res.data.data);
@@ -58,7 +60,7 @@ export default function MeetingDashboard() {
     try {
       console.log(`[Dashboard] Deleting note: ${id}`);
       const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5001/api/notes/${id}`, {
+      await axios.delete(`${API_URL}/api/notes/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchNotes();

@@ -5,6 +5,8 @@ import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, X, Loader2, CheckCircle, AlertCircle, Zap } from 'lucide-react';
 import axios from 'axios';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+
 /**
  * UploadSection Component
  * Handles both audio file uploads and manual transcript pasting.
@@ -53,7 +55,7 @@ export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: ()
         formData.append('transcript', text);
       }
 
-      await axios.post('http://localhost:5001/api/ai/process', formData, {
+      await axios.post(`${API_URL}/api/ai/process`, formData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
