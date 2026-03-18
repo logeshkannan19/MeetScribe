@@ -2,6 +2,9 @@
 
 **"Turn meetings into clarity in seconds."**
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Demo](https://img.shields.io/badge/Demo-Live-brightgreen)](https://client-itlmxnf88-logeshkannan19s-projects.vercel.app)
+
 MeetScribe AI is a production-ready SaaS application that leverages OpenAI Whisper and GPT-4o to transform meeting audio and transcripts into structured summaries, action items, and actionable insights.
 
 ---

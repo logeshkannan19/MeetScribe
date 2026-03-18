@@ -16,7 +16,7 @@ import {
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export default function DashboardShell({ children }: { children: React.ReactNode }) {
+export default function DashboardShell({ children }: { children?: React.ReactNode }) {
   const { user, logout } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
