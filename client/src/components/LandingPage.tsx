@@ -1,6 +1,17 @@
+"use client"
 import { Zap, Shield, Clock, CheckCircle, FileText } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function LandingPage() {
+  const { login } = useAuth();
+  const router = useRouter();
+
+  const handleDemo = async () => {
+    await login('demo@meetscribe.ai', 'demo');
+    router.push('/dashboard');
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-900 dark:text-white">
       {/* Navigation */}
@@ -14,8 +25,8 @@ export default function LandingPage() {
         <div className="flex items-center gap-6">
           <a href="#features" className="text-sm font-medium hover:text-primary-600 transition-colors">Features</a>
           <a href="#pricing" className="text-sm font-medium hover:text-primary-600 transition-colors">Pricing</a>
-          <button className="bg-primary-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20">
-            Get Started
+          <button onClick={handleDemo} className="bg-primary-600 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/20">
+            Try Demo
           </button>
         </div>
       </nav>
@@ -37,8 +48,8 @@ export default function LandingPage() {
           Stop worrying about taking notes. Let AI summarize your meeting audio or transcripts into structured action items and summaries.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <button className="w-full sm:w-auto bg-primary-600 text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-primary-700 transition-all transform hover:scale-105 shadow-xl shadow-primary-500/25">
-            Start Free Trial
+          <button onClick={handleDemo} className="w-full sm:w-auto bg-primary-600 text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-primary-700 transition-all transform hover:scale-105 shadow-xl shadow-primary-500/25">
+            Try Demo Free
           </button>
           <button className="w-full sm:w-auto glass border border-slate-200 dark:border-slate-800 px-8 py-4 rounded-full text-lg font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-all">
             View Live Demo
@@ -89,7 +100,7 @@ export default function LandingPage() {
                   </li>
                 ))}
               </ul>
-              <button className="w-full py-4 rounded-xl border-2 border-slate-200 dark:border-slate-800 font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-all">
+              <button onClick={handleDemo} className="w-full py-4 rounded-xl border-2 border-slate-200 dark:border-slate-800 font-bold hover:bg-slate-50 dark:hover:bg-slate-900 transition-all">
                 Get Started
               </button>
             </div>

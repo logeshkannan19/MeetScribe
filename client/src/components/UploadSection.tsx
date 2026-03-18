@@ -1,17 +1,9 @@
-'use client';
+"use client";
 
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, X, Loader2, CheckCircle, AlertCircle, Zap } from 'lucide-react';
-import axios from 'axios';
+import { Upload, CheckCircle, AlertCircle, Zap, Info } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
-
-/**
- * UploadSection Component
- * Handles both audio file uploads and manual transcript pasting.
- * Integrates with OpenAI Whisper (via backend) for speech-to-text.
- */
 export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: () => void }) {
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState('');
@@ -19,6 +11,8 @@ export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: ()
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [mode, setMode] = useState<'audio' | 'text'>('audio');
+
+  const isDemo = typeof window !== 'undefined' && !!localStorage.getItem('demoUser');
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFile(acceptedFiles[0]);
@@ -28,55 +22,36 @@ export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: ()
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { 'audio/*': ['.mp3', '.wav', '.m4a', '.mpga', '.ogg'] },
-    multiple: false
+    multiple: false,
+    disabled: isDemo
   });
 
-  /**
-   * Main processing handler
-   * Dispatches data to the AI processing pipeline based on current mode
-   */
   const handleProcess = async () => {
+    if (isDemo) {
+      alert('Demo mode: Full AI processing requires backend setup. Check out the existing demo meetings on the left!');
+      return;
+    }
     if (mode === 'audio' && !file) return setError('Please upload an audio file to continue.');
     if (mode === 'text' && !text) return setError('Please paste a meeting transcript to proceed.');
     if (!title) return setError('A meeting title is required for organization.');
 
     setUploading(true);
     setError('');
-
-    try {
-      console.log(`[Upload] Starting processing for: ${title}`);
-      const token = localStorage.getItem('token');
-      const formData = new FormData();
-      formData.append('title', title);
-      
-      if (mode === 'audio' && file) {
-        formData.append('audio', file);
-      } else {
-        formData.append('transcript', text);
-      }
-
-      await axios.post(`${API_URL}/api/ai/process`, formData, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        },
-      });
-
-      onUploadSuccess();
-      setFile(null);
-      setText('');
-      setTitle('');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Processing failed. Please check your API key.');
-    } finally {
+    setTimeout(() => {
       setUploading(false);
-    }
+      setError('Backend not connected. Please set up the server with OpenAI API keys.');
+    }, 2000);
   };
 
   return (
     <div className="bg-white dark:bg-slate-900 rounded-[32px] p-8 border border-slate-200 dark:border-slate-800 shadow-sm mb-8">
+      {isDemo && (
+        <div className="flex items-center gap-2 text-xs text-amber-600 bg-amber-50 dark:bg-amber-900/10 p-3 rounded-xl mb-6">
+          <Info className="w-4 h-4 shrink-0" />
+          <span>Demo mode active. Upload requires backend setup with OpenAI API keys.</span>
+        </div>
+      )}
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Left Side: Inputs */}
         <div className="flex-grow space-y-6">
           <div>
             <label className="block text-sm font-bold mb-2 ml-1">Meeting Title</label>
@@ -109,7 +84,7 @@ export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: ()
               {...getRootProps()} 
               className={`relative border-2 border-dashed rounded-3xl p-12 transition-all cursor-pointer flex flex-col items-center justify-center text-center ${
                 isDragActive ? 'border-primary-500 bg-primary-50/50' : 'border-slate-200 dark:border-slate-800 hover:border-primary-400'
-              }`}
+              } ${isDemo ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <input {...getInputProps()} />
               <div className="bg-primary-50 dark:bg-primary-900/10 p-4 rounded-2xl mb-4">
@@ -137,7 +112,6 @@ export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: ()
           )}
         </div>
 
-        {/* Right Side: Action */}
         <div className="w-full md:w-72 flex flex-col justify-end">
           {error && (
             <div className="flex items-start gap-2 text-xs text-red-500 bg-red-50 dark:bg-red-900/10 p-3 rounded-xl mb-4">
@@ -156,7 +130,7 @@ export default function UploadSection({ onUploadSuccess }: { onUploadSuccess: ()
           >
             {uploading ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Zap className="w-5 h-5 animate-pulse" />
                 <span>Processing AI...</span>
               </>
             ) : (

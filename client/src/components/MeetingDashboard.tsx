@@ -1,14 +1,8 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
 import { 
-  Clock, 
   FileText, 
-  ChevronRight, 
-  MoreVertical, 
   Trash2, 
   ExternalLink,
   Calendar,
@@ -19,27 +13,76 @@ import {
 import UploadSection from './UploadSection';
 import { motion, AnimatePresence } from 'framer-motion';
 
-/**
- * MeetingDashboard Component
- * The main nerve center for MeetScribe AI. 
- * Provides a searchable history of meetings and detailed AI-generated insights.
- */
+const DEMO_NOTES = [
+  {
+    _id: '1',
+    title: 'Q1 Product Roadmap Planning',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+    tags: ['Product', 'Strategy'],
+    summary: [
+      'Discussed Q1 priorities focusing on user retention features',
+      'Agreed to allocate 40% of engineering capacity to mobile app',
+      'Budget approved for third-party API integrations',
+      'Target launch date set for March 15th'
+    ],
+    actionItems: [
+      { task: 'Finalize mobile app feature list', responsibility: 'Product Team' },
+      { task: 'Schedule vendor meetings for API integrations', responsibility: 'Engineering Lead' },
+      { task: 'Prepare Q1 budget presentation for stakeholders', responsibility: 'CEO' }
+    ]
+  },
+  {
+    _id: '2',
+    title: 'Weekly Engineering Standup',
+    createdAt: new Date(Date.now() - 172800000).toISOString(),
+    tags: ['Engineering', 'Sync'],
+    summary: [
+      'Backend migration to new database completed ahead of schedule',
+      'Three critical bugs identified in production, two resolved',
+      'Frontend team needs additional API documentation',
+      'Sprint velocity improved by 15% compared to last week'
+    ],
+    actionItems: [
+      { task: 'Fix remaining production bugs', responsibility: 'Backend Team' },
+      { task: 'Create comprehensive API docs', responsibility: 'Tech Lead' }
+    ]
+  },
+  {
+    _id: '3',
+    title: 'Customer Feedback Review - Enterprise Client',
+    createdAt: new Date(Date.now() - 259200000).toISOString(),
+    tags: ['Customer', 'Sales'],
+    summary: [
+      'Enterprise client requested SSO integration by end of Q1',
+      'Dashboard customization is highest priority feature request',
+      'Overall satisfaction score: 4.2/5.0',
+      'Renewal likely but requires feature commitments'
+    ],
+    actionItems: [
+      { task: 'Scope SSO implementation effort', responsibility: 'Engineering' },
+      { task: 'Prepare custom dashboard proposal', responsibility: 'Product' },
+      { task: 'Schedule follow-up with client', responsibility: 'Account Manager' }
+    ]
+  }
+];
+
 export default function MeetingDashboard() {
   const [notes, setNotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState<any>(null);
 
-  /**
-   * Fetch user's meeting history from the API
-   */
   const fetchNotes = async () => {
+    const token = localStorage.getItem('token');
+    const isDemo = localStorage.getItem('demoUser');
+    
+    if (isDemo) {
+      setNotes(DEMO_NOTES);
+      setLoading(false);
+      return;
+    }
+
     try {
-      console.log('[Dashboard] Fetching meeting history...');
-      const token = localStorage.getItem('token');
-      const res = await axios.get(`${API_URL}/api/notes`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setNotes(res.data.data);
+      setNotes([]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -51,23 +94,19 @@ export default function MeetingDashboard() {
     fetchNotes();
   }, []);
 
-  /**
-   * Handle note deletion with confirmation
-   */
   const deleteNote = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!confirm('Are you certain you want to permanently delete this meeting note?')) return;
-    try {
-      console.log(`[Dashboard] Deleting note: ${id}`);
-      const token = localStorage.getItem('token');
-      await axios.delete(`${API_URL}/api/notes/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      fetchNotes();
+    
+    const isDemo = localStorage.getItem('demoUser');
+    if (isDemo) {
+      setNotes(notes.filter(n => n._id !== id));
       if (selectedNote?._id === id) setSelectedNote(null);
-    } catch (err) {
-      console.error(err);
     }
+  };
+
+  const handleUploadSuccess = () => {
+    fetchNotes();
   };
 
   return (
@@ -83,7 +122,7 @@ export default function MeetingDashboard() {
         </div>
       </header>
 
-      <UploadSection onUploadSuccess={fetchNotes} />
+      <UploadSection onUploadSuccess={handleUploadSuccess} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* History List */}
@@ -209,4 +248,3 @@ export default function MeetingDashboard() {
     </div>
   );
 }
-
